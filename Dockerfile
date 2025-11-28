@@ -1,60 +1,66 @@
 # =====================
-# Base image
+# 1️⃣ Base image
 # =====================
 FROM php:8.2-fpm
 
 # =====================
-# Set working directory
-# =====================
-WORKDIR /var/www/html
-
-# =====================
-# Install system dependencies
+# 2️⃣ System dependencies
 # =====================
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
     libzip-dev \
+    libonig-dev \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
-    libonig-dev \
+    libxml2-dev \
     curl \
-    && docker-php-ext-install pdo_mysql mbstring zip exif pcntl gd \
-    && rm -rf /var/lib/apt/lists/*
+    && docker-php-ext-install pdo_mysql mbstring zip exif pcntl gd xml \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # =====================
-# Install Composer
+# 3️⃣ Set working directory
 # =====================
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+WORKDIR /var/www/html
 
 # =====================
-# Copy only composer files first (for caching)
+# 4️⃣ Copy composer files first (cache optimization)
 # =====================
 COPY composer.json composer.lock ./
 
 # =====================
-# Install PHP dependencies
+# 5️⃣ Install PHP dependencies
 # =====================
-RUN composer install --no-dev --optimize-autoloader
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+    && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
+    && php -r "unlink('composer-setup.php');" \
+    && composer install --no-dev --optimize-autoloader
 
 # =====================
-# Copy the rest of the application
+# 6️⃣ Copy all project files
 # =====================
 COPY . .
 
 # =====================
-# Permissions
+# 7️⃣ Set permissions for storage & cache
 # =====================
-RUN mkdir -p storage/framework/{sessions,views,cache} storage/logs bootstrap/cache \
-    && chmod -R a+rw storage bootstrap/cache
+RUN mkdir -p storage/framework/{sessions,views,cache,testing} storage/logs bootstrap/cache \
+    && chmod -R 777 storage bootstrap/cache
 
 # =====================
-# Expose port 10000 (Render listens on this)
+# 8️⃣ Set environment variables (Render will override .env anyway)
 # =====================
-EXPOSE 10000
+ENV APP_ENV=production
+ENV APP_DEBUG=false
 
 # =====================
-# Start command
+# 9️⃣ Expose port (PHP-FPM)
 # =====================
-CMD ["php", "-S", "0.0.0.0:10000", "-t", "public"]
+EXPOSE 3000
+
+# =====================
+# 🔟 Start command
+# =====================
+# Render يحتاج listener على 0.0.0.0
+CMD ["php", "-d", "variables_order=EGPCS", "server.php", "0.0.0.0:3000"]
