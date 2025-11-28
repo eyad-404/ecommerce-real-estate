@@ -1,0 +1,21 @@
+/* Profile image hover effect */
+.profile-img {
+    width: 35px;
+    height: 35px;
+    transition: transform 0.3s;
+}
+
+.profile-img:hover {
+    transform: scale(1.1);
+}
+
+/* Navbar link hover color using Bootstrap utilities */
+.navbar-nav .nav-link:hover {
+    color: #ffc107 !important; /* Subtle highlight on hover */
+}
+
+/* Dropdown menu shadow and rounded corners */
+.dropdown-menu {
+    border-radius: 0.5rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}

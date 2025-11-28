@@ -1,0 +1,120 @@
+/* GENERAL BODY */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: white;
+    color: #ddd;
+    scroll-behavior: smooth;
+}
+
+/* NAVBAR BASE */
+.navbar {
+    transition: all 0.4s ease;
+    background: #fff; /* simple dark background */
+    padding: 0.2rem 0;
+    z-index: 999;
+    border-bottom: 1px solid #222;
+    border-radius: 0 0 0 0; /* no rounded corners */
+}
+
+/* NAVBAR LINKS */
+.navbar-nav .nav-link {
+    color: black !important;
+    font-weight: 600;
+    position: relative;
+    transition: all 0.3s ease;
+}
+.navbar-nav .nav-link::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 3px;
+    background: #896C6C; /* subtle underline color */
+    transition: width 0.3s;
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    border-radius: 3px;
+}
+.navbar-nav .nav-link:hover::after {
+    width: 100%;
+}
+.navbar-nav .nav-link.active {
+    color: #896C6C !important;
+}
+.navbar-nav .nav-link:hover {
+    color: #896C6C !important;
+    transform: translateY(-1px);
+}
+
+/* DROPDOWN ARROW */
+.nav-item.dropdown .dropdown-toggle::after {
+    display: none;
+}
+.nav-item.dropdown .dropdown-toggle i.bi-chevron-down {
+    transition: transform 0.3s;
+}
+.nav-item.dropdown.show .dropdown-toggle i.bi-chevron-down {
+    transform: rotate(180deg);
+}
+
+/* PROFILE IMAGE */
+.profile-img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border: 2px solid #0d6efd;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+.profile-img:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 10px rgba(13, 110, 253, 0.4);
+}
+
+/* DROPDOWN MENU */
+.dropdown-menu {
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+    border: none;
+    transition: all 0.3s ease;
+    background: #111;
+}
+.dropdown-item {
+    color: #ddd;
+    transition: all 0.3s ease;
+}
+.dropdown-item:hover {
+    background-color: rgba(13,110,253,0.15);
+    color: #0d6efd;
+    transform: translateX(5px);
+}
+
+/* CUSTOM BUTTON */
+.btn-custom {
+    background-color: #0d6efd;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    border: none;
+    padding: 0.5rem 1.2rem;
+    transition: all 0.3s ease;
+}
+.btn-custom:hover {
+    background-color: #0b5ed7;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(13,110,253,0.3);
+}
+
+/* FOOTER */
+footer {
+    font-weight: 500;
+    background: white;
+    color: black;
+    padding: 1.5rem 0;
+}
+
+/* NAVBAR SCROLL EFFECT */
+.navbar.navbar-scrolled {
+    background: white;
+    padding: 0.5rem 0;
+}
