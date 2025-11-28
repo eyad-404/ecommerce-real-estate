@@ -1,34 +1,60 @@
-# ---------- Stage 1: PHP + Composer ----------
-FROM php:8.2-cli
+# =====================
+# Base image
+# =====================
+FROM php:8.2-fpm
 
+# =====================
 # Set working directory
-WORKDIR /app
+# =====================
+WORKDIR /var/www/html
 
+# =====================
 # Install system dependencies
+# =====================
 RUN apt-get update && apt-get install -y \
-    git unzip libzip-dev libpng-dev libonig-dev libxml2-dev \
-    && docker-php-ext-install pdo_mysql mbstring zip exif pcntl gd
+    git \
+    unzip \
+    libzip-dev \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    libonig-dev \
+    curl \
+    && docker-php-ext-install pdo_mysql mbstring zip exif pcntl gd \
+    && rm -rf /var/lib/apt/lists/*
 
+# =====================
 # Install Composer
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-    && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
-    && php -r "unlink('composer-setup.php');"
+# =====================
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Copy composer files
+# =====================
+# Copy only composer files first (for caching)
+# =====================
 COPY composer.json composer.lock ./
 
+# =====================
 # Install PHP dependencies
+# =====================
 RUN composer install --no-dev --optimize-autoloader
 
+# =====================
 # Copy the rest of the application
+# =====================
 COPY . .
 
-# Ensure storage & bootstrap cache are writable
+# =====================
+# Permissions
+# =====================
 RUN mkdir -p storage/framework/{sessions,views,cache} storage/logs bootstrap/cache \
     && chmod -R a+rw storage bootstrap/cache
 
-# Expose port 8080 for Render
-EXPOSE 8080
+# =====================
+# Expose port 10000 (Render listens on this)
+# =====================
+EXPOSE 10000
 
-# Start Laravel using PHP built-in server
-CMD ["php", "-S", "0.0.0.0:8080", "-t", "public"]
+# =====================
+# Start command
+# =====================
+CMD ["php", "-S", "0.0.0.0:10000", "-t", "public"]
