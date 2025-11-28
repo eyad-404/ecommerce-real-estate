@@ -5,8 +5,8 @@
         env PATH /usr/local/bin:/usr/bin:/bin
         env APP_ENV production
         env APP_DEBUG false
-        env APP_KEY YOUR_APP_KEY_HERE
-        env APP_URL https://your-render-url.onrender.com
+        env APP_KEY base64:GGeNns5i4Cng34VnanLv8QAkBAOBCSu3tIM2jDUnPTA=
+        env APP_URL https://ecommerce-realestate.onrender.com
     }
 
     file_server
