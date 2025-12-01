@@ -7,29 +7,24 @@ return [
     | Default Mailer
     |--------------------------------------------------------------------------
     |
-    | This option controls the default mailer that is used to send all email
-    | messages unless another mailer is explicitly specified.
+    | Laravel requires a default mailer. Since we are sending emails through
+    | Brevo API via a custom notification, we can safely use 'log' here.
     |
     */
 
-    'default' => env('MAIL_MAILER', 'sendinblue'),
+    'default' => env('MAIL_MAILER', 'log'),
 
     /*
     |--------------------------------------------------------------------------
     | Mailer Configurations
     |--------------------------------------------------------------------------
     |
-    | Configure all of the mailers used by your application.
-    | The "sendinblue" transport requires the juanparati/sendinblue package.
+    | These are the default mailers Laravel uses. We don’t need Brevo here
+    | because we are using Guzzle in our custom notification.
     |
     */
 
     'mailers' => [
-
-        'sendinblue' => [
-            'transport' => 'sendinblue',
-            'api_key' => env('BREVO_API_KEY'),
-        ],
 
         'smtp' => [
             'transport' => 'smtp',
@@ -39,7 +34,10 @@ return [
             'username' => env('MAIL_USERNAME'),
             'password' => env('MAIL_PASSWORD'),
             'timeout' => null,
-            'local_domain' => env('MAIL_EHLO_DOMAIN', parse_url(env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
+            'local_domain' => env(
+                'MAIL_EHLO_DOMAIN',
+                parse_url(env('APP_URL', 'http://localhost'), PHP_URL_HOST)
+            ),
         ],
 
         'sendmail' => [
@@ -49,7 +47,7 @@ return [
 
         'log' => [
             'transport' => 'log',
-            'channel' => env('MAIL_LOG_CHANNEL'),
+            'channel' => env('MAIL_LOG_CHANNEL', 'stack'),
         ],
 
         'array' => [
@@ -59,7 +57,7 @@ return [
         'failover' => [
             'transport' => 'failover',
             'mailers' => [
-                'sendinblue',
+                'smtp',
                 'log',
             ],
             'retry_after' => 60,
@@ -72,14 +70,32 @@ return [
     | Global "From" Address
     |--------------------------------------------------------------------------
     |
-    | All emails will be sent from this address unless otherwise specified.
-    | Make sure this email is verified in Brevo.
+    | All emails will be sent from this address. Make sure it’s verified in
+    | Brevo.
     |
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'verified@elkayan.com'),
+        'address' => env('MAIL_FROM_ADDRESS', 'elkayan.team@gmail.com'),
         'name' => env('MAIL_FROM_NAME', 'EL Kayan'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Markdown Mail Settings
+    |--------------------------------------------------------------------------
+    |
+    | If you are using Markdown based email rendering, configure your theme
+    | and component paths here.
+    |
+    */
+
+    'markdown' => [
+        'theme' => 'default',
+
+        'paths' => [
+            resource_path('views/vendor/mail'),
+        ],
     ],
 
 ];
