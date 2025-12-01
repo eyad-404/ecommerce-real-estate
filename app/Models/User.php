@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\File;
+use App\Notifications\ResetPasswordBrevo;
 
 class User extends Authenticatable
 {
@@ -68,6 +69,10 @@ class User extends Authenticatable
         });
     }
 
+    public function sendPasswordResetNotification($token)
+{
+    $this->notify(new ResetPasswordBrevo($token));
+}
     /**
      * The attributes that should be hidden for serialization.
      *
