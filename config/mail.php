@@ -6,14 +6,26 @@ return [
     |--------------------------------------------------------------------------
     | Default Mailer
     |--------------------------------------------------------------------------
+    |
+    | This option controls the default mailer that is used to send all email
+    | messages unless another mailer is explicitly specified when sending
+    | the message. You can set it to 'brevo', 'smtp', 'log', etc.
+    |
     */
-    'default' => env('MAIL_MAILER', 'smtp'),
+
+    'default' => env('MAIL_MAILER', 'brevo'),
 
     /*
     |--------------------------------------------------------------------------
     | Mailer Configurations
     |--------------------------------------------------------------------------
+    |
+    | Here you may configure all of the mailers used by your application plus
+    | their respective settings. Laravel supports SMTP, Postmark, Mailgun,
+    | and third-party drivers like Brevo (Sendinblue) via API.
+    |
     */
+
     'mailers' => [
 
         'smtp' => [
@@ -50,15 +62,25 @@ return [
             'retry_after' => 60,
         ],
 
+        'brevo' => [
+            'transport' => 'sendinblue', // Use the Brevo/Sendinblue API
+            'api_key' => env('BREVO_API_KEY'),
+        ],
+
     ],
 
     /*
     |--------------------------------------------------------------------------
     | Global "From" Address
     |--------------------------------------------------------------------------
+    |
+    | You may wish for all emails sent by your application to be sent from
+    | the same address. Make sure this email is verified in Brevo.
+    |
     */
+
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'elkayan.team@gmail.com'),
+        'address' => env('MAIL_FROM_ADDRESS', 'verified@elkayan.com'),
         'name' => env('MAIL_FROM_NAME', 'EL Kayan'),
     ],
 
