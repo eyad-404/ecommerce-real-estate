@@ -8,25 +8,28 @@ return [
     |--------------------------------------------------------------------------
     |
     | This option controls the default mailer that is used to send all email
-    | messages unless another mailer is explicitly specified when sending
-    | the message. You can set it to 'brevo', 'smtp', 'log', etc.
+    | messages unless another mailer is explicitly specified.
     |
     */
 
-    'default' => env('MAIL_MAILER', 'brevo'),
+    'default' => env('MAIL_MAILER', 'sendinblue'),
 
     /*
     |--------------------------------------------------------------------------
     | Mailer Configurations
     |--------------------------------------------------------------------------
     |
-    | Here you may configure all of the mailers used by your application plus
-    | their respective settings. Laravel supports SMTP, Postmark, Mailgun,
-    | and third-party drivers like Brevo (Sendinblue) via API.
+    | Configure all of the mailers used by your application.
+    | The "sendinblue" transport requires the juanparati/sendinblue package.
     |
     */
 
     'mailers' => [
+
+        'sendinblue' => [
+            'transport' => 'sendinblue',
+            'api_key' => env('SENDINBLUE_KEY'),
+        ],
 
         'smtp' => [
             'transport' => 'smtp',
@@ -56,15 +59,10 @@ return [
         'failover' => [
             'transport' => 'failover',
             'mailers' => [
-                'smtp',
+                'sendinblue',
                 'log',
             ],
             'retry_after' => 60,
-        ],
-
-        'brevo' => [
-            'transport' => 'sendinblue', // Use the Brevo/Sendinblue API
-            'api_key' => env('BREVO_API_KEY'),
         ],
 
     ],
@@ -74,8 +72,8 @@ return [
     | Global "From" Address
     |--------------------------------------------------------------------------
     |
-    | You may wish for all emails sent by your application to be sent from
-    | the same address. Make sure this email is verified in Brevo.
+    | All emails will be sent from this address unless otherwise specified.
+    | Make sure this email is verified in Brevo.
     |
     */
 
