@@ -28,7 +28,7 @@ return [
 
         'sendinblue' => [
             'transport' => 'sendinblue',
-            'api_key' => env('SENDINBLUE_KEY'),
+            'api_key' => env('BREVO_API_KEY'),
         ],
 
         'smtp' => [
