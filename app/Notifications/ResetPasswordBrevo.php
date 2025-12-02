@@ -2,18 +2,14 @@
 
 namespace App\Notifications;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
 use Brevo\Client\Api\TransactionalEmailsApi;
 use Brevo\Client\Configuration;
 use Brevo\Client\Model\SendSmtpEmail;
 
-class ResetPasswordBrevo extends Notification implements ShouldQueue
+class ResetPasswordBrevo extends Notification 
 {
-    use Queueable;
-
     public $token;
 
     /**
