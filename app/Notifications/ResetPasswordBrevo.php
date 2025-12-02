@@ -2,9 +2,7 @@
 
 namespace App\Notifications;
 
-use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Brevo\Client\Api\TransactionalEmailsApi;
 use Brevo\Client\Configuration;
@@ -12,35 +10,23 @@ use Brevo\Client\Model\SendSmtpEmail;
 
 class ResetPasswordBrevo extends Notification
 {
-    use Queueable;
-
     public $token;
 
-    /**
-     * Create a new notification instance.
-     */
     public function __construct($token)
     {
         $this->token = $token;
     }
 
-    /**
-     * Get the notification's delivery channels.
-     */
     public function via($notifiable)
     {
-        // Laravel Mail facade is required but we'll override sending
+        // لازم Laravel Mail facade يكون موجود عشان Notification
         return ['mail'];
     }
 
-    /**
-     * Send the email using Brevo API.
-     */
     public function toMail($notifiable)
     {
         $resetUrl = url("/reset-password/{$this->token}?email=".urlencode($notifiable->email));
 
-        // Initialize Brevo API
         $config = Configuration::getDefaultConfiguration()
             ->setApiKey('api-key', env('BREVO_API_KEY'));
 
@@ -60,12 +46,18 @@ class ResetPasswordBrevo extends Notification
         ]);
 
         try {
-            $apiInstance->sendTransacEmail($sendSmtpEmail);
+            $response = $apiInstance->sendTransacEmail($sendSmtpEmail);
+            \Log::info('Brevo email sent successfully', [
+                'to' => $notifiable->email,
+                'response' => $response
+            ]);
         } catch (\Exception $e) {
-            \Log::error("Brevo send email failed: " . $e->getMessage());
+            \Log::error("Brevo send email failed: " . $e->getMessage(), [
+                'to' => $notifiable->email
+            ]);
         }
 
-        // Return a dummy MailMessage to satisfy Laravel
+        // MailMessage dummy عشان Laravel Notification
         return (new MailMessage)
             ->subject('Password Reset')
             ->line('If you are seeing this message, check the logs for Brevo API send.');
