@@ -10,7 +10,7 @@ use Brevo\Client\Api\TransactionalEmailsApi;
 use Brevo\Client\Configuration;
 use Brevo\Client\Model\SendSmtpEmail;
 
-class ResetPasswordBrevo extends Notification implements ShouldQueue
+class ResetPasswordBrevo extends Notification
 {
     use Queueable;
 
